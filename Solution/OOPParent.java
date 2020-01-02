@@ -1,5 +1,5 @@
 package OOP.Solution;
 
 public @interface OOPParent {
-    // TODO: Implement
+    Class parent();
 }
