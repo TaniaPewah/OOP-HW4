@@ -26,11 +26,12 @@ public class OOPObject {
         Annotation[] annotations = myself.getAnnotations();
 
         // for every parent annotation
-        for(Annotation annotation : annotations){
-            if(annotation instanceof OOPParents){
-                for(OOPParent parentAnnot : ((OOPParents) annotation).parents()){
-                directParents.add( parentAnnot.parent() ) ;
-                // how to create instance of the class in the aprent attribute
+        for (Annotation annotation : annotations) {
+            if (annotation instanceof OOPParents) {
+                for (OOPParent parentAnnot : ((OOPParents) annotation).value()) {
+                    directParents.add(parentAnnot.parent());
+                    // how to create instance of the class in the aprent attribute
+                }
             }
         }
     }
