@@ -277,9 +277,9 @@ public class OOPObjectSimpleTest {
                 32, "checking_inheritance", "another parameter");
     }
 
-//    public static void main(String[] args) throws OOP4ObjectInstantiationFailedException {
-//        NoVirtualTestClasses.setConstruction_order(new ArrayList<>());
-//        NoVirtualTestClasses.SS_A a_obj = new NoVirtualTestClasses.SS_A();
-//        System.out.println(a_obj.protected_inheritance_check(32, "myFuncCheck"));
-//    }
+    public static void main(String[] args) throws OOP4ObjectInstantiationFailedException {
+        NoVirtualTestClasses.setConstruction_order(new ArrayList<>());
+        NoVirtualTestClasses.SS_A a_obj = new NoVirtualTestClasses.SS_A();
+        System.out.println(a_obj.protected_inheritance_check(32, "myFuncCheck"));
+    }
 }

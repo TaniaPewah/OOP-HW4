@@ -5,6 +5,11 @@ import OOP.Provided.OOP4MethodInvocationFailedException;
 import OOP.Provided.OOP4NoSuchMethodException;
 import OOP.Provided.OOP4ObjectInstantiationFailedException;
 
+import java.lang.annotation.Annotation;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
 public class OOPObject {
     private List<Object> directParents;
     private HashMap<String, Object> virtualAncestor;
@@ -13,7 +18,7 @@ public class OOPObject {
 
     public OOPObject() throws OOP4ObjectInstantiationFailedException {
         // TODO: Implement
-        directParents = new ArrayList<Object> ();
+        directParents = new ArrayList<Object>();
         virtualAncestor = new HashMap<>();
 
         // get all my annotations - runtime reflection
@@ -22,9 +27,10 @@ public class OOPObject {
 
         // for every parent annotation
         for(Annotation annotation : annotations){
-            if(annotation instanceof OOPParent){
-                OOPParent parentAnnot = (OOPParent) annotation;
-                directParents.add( new parentAnnot.parent());
+            if(annotation instanceof OOPParents){
+                for(OOPParent parentAnnot : ((OOPParents) annotation).parents()){
+                directParents.add( parentAnnot.parent() ) ;
+                // how to create instance of the class in the aprent attribute
             }
         }
     }
