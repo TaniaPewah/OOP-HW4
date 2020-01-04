@@ -17,7 +17,7 @@ public class OOPObject {
 
 
     public OOPObject() throws OOP4ObjectInstantiationFailedException {
-        // TODO: Implement
+
         directParents = new ArrayList<Object>();
         virtualAncestor = new HashMap<>();
 
@@ -26,18 +26,38 @@ public class OOPObject {
         Annotation[] annotations = myself.getAnnotations();
 
         // for every parent annotation
+        // TODO how to create instance of the class using the prent attribute
+        // TODO do it recursively
         for (Annotation annotation : annotations) {
             if (annotation instanceof OOPParents) {
                 for (OOPParent parentAnnot : ((OOPParents) annotation).value()) {
-                    directParents.add(parentAnnot.parent());
-                    // how to create instance of the class in the aprent attribute
+
+                    OOPObject object = null;
+                    try{
+                        //object = new parentAnnot.parent();
+                    }
+                    catch (Exception e){
+                        throw new OOP4ObjectInstantiationFailedException();
+                    }
+
+                    directParents.add( object );
                 }
             }
         }
     }
 
     public boolean multInheritsFrom(Class<?> cls) {
-        // TODO: Implement
+        // get all my annotations - runtime reflection
+        // checks only for direct parents now-
+        // TODO add recursion
+        Class myself = OOPObject.class;
+        Annotation[] annotations = myself.getAnnotationsByType( OOPParent.class );
+
+        for (OOPParent parentAnnot : (OOPParent)annotations) {
+                 if( cls.equals( parentAnnot.parent())) {
+                     return true;
+                }
+            }
         return false;
     }
 
