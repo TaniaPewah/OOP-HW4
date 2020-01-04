@@ -51,13 +51,23 @@ public class OOPObject {
         // checks only for direct parents now-
         // TODO add recursion
         Class myself = OOPObject.class;
-        Annotation[] annotations = myself.getAnnotationsByType( OOPParent.class );
+        OOPParent[] annotations = (OOPParent[]) myself.getAnnotationsByType( OOPParent.class );
 
-        for (OOPParent parentAnnot : (OOPParent)annotations) {
-                 if( cls.equals( parentAnnot.parent())) {
-                     return true;
-                }
+        for (OOPParent parentAnnot : annotations) {
+             Class parent = parentAnnot.parent();
+             if( cls.equals( parent )) {
+                 return true;
+             }
+        }
+
+        // should we iterate all the parents?
+        for( Object obj : directParents ) {
+            if ( obj.getClass().equals( cls )) {
+                return true;
             }
+            //try ( ((OOPObject)obj).multInheritsFrom(cls)){
+
+        }
         return false;
     }
 
