@@ -14,8 +14,6 @@ public class OOPObject {
     private List<Object> directParents;
     private HashMap<String, Object> virtualAncestor;
 
-
-
     public OOPObject() throws OOP4ObjectInstantiationFailedException {
 
         directParents = new ArrayList<Object>();
@@ -32,15 +30,16 @@ public class OOPObject {
             if (annotation instanceof OOPParents) {
                 for (OOPParent parentAnnot : ((OOPParents) annotation).value()) {
 
+                    System.out.println(parentAnnot.parent().getName());
+
                     OOPObject object = null;
-                    try{
-                        //object = new parentAnnot.parent();
-                    }
-                    catch (Exception e){
+                    try {
+                        //object = new (parentAnnot.parent());
+                    } catch (Exception e) {
                         throw new OOP4ObjectInstantiationFailedException();
                     }
 
-                    directParents.add( object );
+                    directParents.add(object);
                 }
             }
         }
@@ -51,29 +50,29 @@ public class OOPObject {
         // checks only for direct parents now-
         // TODO add recursion
         Class myself = OOPObject.class;
-        OOPParent[] annotations = (OOPParent[]) myself.getAnnotationsByType( OOPParent.class );
+        OOPParent[] annotations = (OOPParent[]) myself.getAnnotationsByType(OOPParent.class);
 
         for (OOPParent parentAnnot : annotations) {
-             Class parent = parentAnnot.parent();
-             if( cls.equals( parent )) {
-                 return true;
-             }
+            Class parent = parentAnnot.parent();
+            if (cls.equals(parent)) {
+                return true;
+            }
         }
 
         // should we iterate all the parents?
-        for( Object obj : directParents ) {
-            if ( obj.getClass().equals( cls )) {
+        for (Object obj : directParents) {
+            if (obj.getClass().equals(cls)) {
                 return true;
             }
             //try ( ((OOPObject)obj).multInheritsFrom(cls)){
-
         }
         return false;
     }
 
-    public Object definingObject(String methodName, Class<?> ...argTypes)
+    public Object definingObject(String methodName, Class<?>... argTypes)
             throws OOP4AmbiguousMethodException, OOP4NoSuchMethodException {
         // TODO: Implement
+
         return null;
     }
 
@@ -82,4 +81,33 @@ public class OOPObject {
         // TODO: Implement
         return null;
     }
+//    public static void main(String[] args) throws OOP4ObjectInstantiationFailedException {
+//
+//        System.out.print( "A parents: ");
+//        A a = new A();
+//        System.out.print( "B parents: ");
+//        B b = new B();
+//        System.out.print( "C parents: ");
+//        C c = new C();
+//    }
 }
+//
+//class A extends OOPObject {
+//    public A() throws OOP4ObjectInstantiationFailedException {
+//
+//    }
+//}
+//
+//@OOPParent(parent = A.class, isVirtual = false)
+//class B extends OOPObject {
+//    public B() throws OOP4ObjectInstantiationFailedException {
+//
+//    }
+//}
+//@OOPParent(parent = A.class, isVirtual = false)
+//@OOPParent(parent = B.class, isVirtual = false)
+//class C extends OOPObject {
+//    public C() throws OOP4ObjectInstantiationFailedException {
+//
+//    }
+//}
