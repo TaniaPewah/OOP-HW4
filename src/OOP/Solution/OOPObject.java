@@ -20,21 +20,24 @@ public class OOPObject {
         virtualAncestor = new HashMap<>();
 
         // get all my annotations - runtime reflection
-        Class myself = OOPObject.class;
+        Class myself = this.getClass();
         Annotation[] annotations = myself.getAnnotations();
 
         // for every parent annotation
         // TODO how to create instance of the class using the prent attribute
-        // TODO do it recursively
+        // TODO do it recursively DFS
         for (Annotation annotation : annotations) {
+            if (annotation instanceof OOPParent) {
+                System.out.println(((OOPParent)annotation).parent().getName());
+            }
+
             if (annotation instanceof OOPParents) {
                 for (OOPParent parentAnnot : ((OOPParents) annotation).value()) {
 
                     System.out.println(parentAnnot.parent().getName());
-
                     OOPObject object = null;
                     try {
-                        //object = new (parentAnnot.parent());
+                         //object = parentAnnot.parent().getConstructor().newInstance();;
                     } catch (Exception e) {
                         throw new OOP4ObjectInstantiationFailedException();
                     }
@@ -72,6 +75,8 @@ public class OOPObject {
     public Object definingObject(String methodName, Class<?>... argTypes)
             throws OOP4AmbiguousMethodException, OOP4NoSuchMethodException {
         // TODO: Implement
+        //.getMethods()
+        //.getDeclaredMethods()
 
         return null;
     }
@@ -81,33 +86,33 @@ public class OOPObject {
         // TODO: Implement
         return null;
     }
-//    public static void main(String[] args) throws OOP4ObjectInstantiationFailedException {
-//
-//        System.out.print( "A parents: ");
-//        A a = new A();
-//        System.out.print( "B parents: ");
-//        B b = new B();
-//        System.out.print( "C parents: ");
-//        C c = new C();
-//    }
+    public static void main(String[] args) throws OOP4ObjectInstantiationFailedException {
+
+        System.out.print( "A parents: ");
+        A a = new A();
+        System.out.print( "B parents: ");
+        B b = new B();
+        System.out.print( "C parents: ");
+        C c = new C();
+    }
 }
-//
-//class A extends OOPObject {
-//    public A() throws OOP4ObjectInstantiationFailedException {
-//
-//    }
-//}
-//
-//@OOPParent(parent = A.class, isVirtual = false)
-//class B extends OOPObject {
-//    public B() throws OOP4ObjectInstantiationFailedException {
-//
-//    }
-//}
-//@OOPParent(parent = A.class, isVirtual = false)
-//@OOPParent(parent = B.class, isVirtual = false)
-//class C extends OOPObject {
-//    public C() throws OOP4ObjectInstantiationFailedException {
-//
-//    }
-//}
+
+class A extends OOPObject {
+    public A() throws OOP4ObjectInstantiationFailedException {
+        super();
+    }
+}
+
+@OOPParent(parent = A.class, isVirtual = false)
+class B extends OOPObject {
+    public B() throws OOP4ObjectInstantiationFailedException {
+        super();
+    }
+}
+@OOPParent(parent = A.class, isVirtual = false)
+@OOPParent(parent = B.class, isVirtual = false)
+class C extends OOPObject {
+    public C() throws OOP4ObjectInstantiationFailedException {
+        super();
+    }
+}
