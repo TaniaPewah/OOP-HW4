@@ -35,9 +35,10 @@ public class OOPObject {
                 for (OOPParent parentAnnot : ((OOPParents) annotation).value()) {
 
                     System.out.println(parentAnnot.parent().getName());
-                    OOPObject object = null;
+                    Object object = null;
                     try {
-                         //object = parentAnnot.parent().getConstructor().newInstance();;
+                        //parentAnnot.parent().getConstructor().newInstance();
+                         object = parentAnnot.parent().getConstructor().newInstance();
                     } catch (Exception e) {
                         throw new OOP4ObjectInstantiationFailedException();
                     }
