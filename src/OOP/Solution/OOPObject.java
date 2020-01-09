@@ -12,6 +12,7 @@ import java.util.List;
 
 public class OOPObject {
     private List<Object> directParents;
+    private List<Object> allAnscestors;
     private HashMap<String, Object> virtualAncestor;
 
     public OOPObject() throws OOP4ObjectInstantiationFailedException {
@@ -21,31 +22,21 @@ public class OOPObject {
 
         // get all my annotations - runtime reflection
         Class myself = this.getClass();
-        Annotation[] annotations = myself.getAnnotations();
+        OOPParent[] annotations = (OOPParent[]) myself.getAnnotationsByType(OOPParent.class);
 
         // for every parent annotation
-        // TODO how to create instance of the class using the prent attribute
-        // TODO do it recursively DFS
-        for (Annotation annotation : annotations) {
-            if (annotation instanceof OOPParent) {
-                System.out.println(((OOPParent)annotation).parent().getName());
+        for (OOPParent parentAnnot : annotations) {
+
+            // debug print
+            System.out.println(parentAnnot.parent().getName());
+            Object object = null;
+            try {
+                // create newInstance
+                object = parentAnnot.parent().getConstructor().newInstance();
+            } catch (Exception e) {
+                throw new OOP4ObjectInstantiationFailedException();
             }
-
-            if (annotation instanceof OOPParents) {
-                for (OOPParent parentAnnot : ((OOPParents) annotation).value()) {
-
-                    System.out.println(parentAnnot.parent().getName());
-                    Object object = null;
-                    try {
-                        //parentAnnot.parent().getConstructor().newInstance();
-                         object = parentAnnot.parent().getConstructor().newInstance();
-                    } catch (Exception e) {
-                        throw new OOP4ObjectInstantiationFailedException();
-                    }
-
-                    directParents.add(object);
-                }
-            }
+            directParents.add(object);
         }
     }
 
@@ -53,22 +44,19 @@ public class OOPObject {
         // get all my annotations - runtime reflection
         // checks only for direct parents now-
         // TODO add recursion
-        Class myself = OOPObject.class;
-        OOPParent[] annotations = (OOPParent[]) myself.getAnnotationsByType(OOPParent.class);
+        Class myself = this.getClass();
 
-        for (OOPParent parentAnnot : annotations) {
-            Class parent = parentAnnot.parent();
-            if (cls.equals(parent)) {
+        // for every parent
+        for (Object parent : directParents) {
+
+            // is my class = cls?
+            if (parent.getClass().equals(cls)) {
                 return true;
             }
-        }
-
-        // should we iterate all the parents?
-        for (Object obj : directParents) {
-            if (obj.getClass().equals(cls)) {
-                return true;
+            // if im a OOPObj - mulIn
+            if ((OOPObject.class).isAssignableFrom(parent.getClass())){
+                return ((OOPObject)parent).multInheritsFrom(cls);
             }
-            //try ( ((OOPObject)obj).multInheritsFrom(cls)){
         }
         return false;
     }
@@ -95,6 +83,16 @@ public class OOPObject {
         B b = new B();
         System.out.print( "C parents: ");
         C c = new C();
+        System.out.print( "D parents: ");
+        D d = new D();
+        System.out.println( "D multiinherits from A true: ");
+        System.out.println( d.multInheritsFrom(A.class));
+        System.out.println( "D multiinherits from B true: ");
+        System.out.println( d.multInheritsFrom(B.class));
+        System.out.println( "D multiinherits from String true: ");
+        System.out.println( d.multInheritsFrom(String.class));
+        System.out.println( "D multiinherits from Boolean false: ");
+        System.out.println( d.multInheritsFrom(Boolean.class));
     }
 }
 
@@ -110,10 +108,18 @@ class B extends OOPObject {
         super();
     }
 }
+
 @OOPParent(parent = A.class, isVirtual = false)
-@OOPParent(parent = B.class, isVirtual = false)
 class C extends OOPObject {
     public C() throws OOP4ObjectInstantiationFailedException {
+        super();
+    }
+}
+@OOPParent(parent = B.class, isVirtual = false)
+@OOPParent(parent = C.class, isVirtual = false)
+@OOPParent(parent = String.class, isVirtual = false)
+class D extends OOPObject {
+    public D() throws OOP4ObjectInstantiationFailedException {
         super();
     }
 }
