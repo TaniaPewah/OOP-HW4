@@ -6,6 +6,7 @@ import OOP.Provided.OOP4NoSuchMethodException;
 import OOP.Provided.OOP4ObjectInstantiationFailedException;
 
 import java.lang.annotation.Annotation;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -112,9 +113,32 @@ public class OOPObject {
             OOP4AmbiguousMethodException, OOP4NoSuchMethodException, OOP4MethodInvocationFailedException {
         // TODO: Implement
 
+        // Separate callArgs types, find the object who defines the method, invoke
+        //Class[] argTypes = new Class[callArgs.length];
+        List<Class> argTypes = new ArrayList<Class>();
+
+        for( Object arg : callArgs ){
+            argTypes.add(arg.getClass());
+        }
+
+        Class[] typesClasses = new Class[callArgs.length];
+        typesClasses = argTypes.toArray(typesClasses);
+        Object defObj = this.definingObject(methodName, typesClasses );
+
+        try {
+            Method method = defObj.getClass().getMethod(methodName, typesClasses);
+            method.invoke(defObj, callArgs);
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+        }
+
         return null;
     }
-    public static void main(String[] args) throws OOP4ObjectInstantiationFailedException, OOP4NoSuchMethodException, OOP4AmbiguousMethodException {
+    public static void main(String[] args) throws OOP4ObjectInstantiationFailedException, OOP4NoSuchMethodException, OOP4AmbiguousMethodException, OOP4MethodInvocationFailedException {
 
         System.out.print( "A parents: ");
         A a = new A();
@@ -124,6 +148,8 @@ public class OOPObject {
         C c = new C();
         System.out.print( "D parents: ");
         D d = new D();
+
+        // multiInherits from test
         System.out.println( "D multiinherits from P true: ");
         System.out.println( d.multInheritsFrom(P.class));
         System.out.println( "D multiinherits from A true: ");
@@ -137,6 +163,7 @@ public class OOPObject {
         System.out.println( "D multiinherits from OOPObjc true: ");
         System.out.println( d.multInheritsFrom(OOPObject.class));
 
+        // definingObject test
         System.out.println( "D Sleeps: D ");
         System.out.println( d.definingObject("Sleep").getClass().getName());
         System.out.println( "D Speaks: B ");
@@ -145,9 +172,15 @@ public class OOPObject {
         System.out.println( "D Sneaks: A ");
         System.out.println( d.definingObject("Sneak").getClass().getName());
 
-        // TODO doesnt work
-        System.out.println( "D Stores: P ");
+        // TODO doesnt work?
+        System.out.println( "D Stores: P ?");
         System.out.println( d.definingObject("Store").getClass().getName());
+
+
+        // invoke test
+        System.out.println( "D invokes Sleep: zzz ");
+
+        d.invoke("Sleep", 5);
 
     }
 }
@@ -216,6 +249,9 @@ class D extends OOPObject {
         super();
     }
     public void Sleep(){
+        System.out.println( "zzz");
+    }
+    public void Sleep( Integer n ){
         System.out.println( "zzz");
     }
 }
