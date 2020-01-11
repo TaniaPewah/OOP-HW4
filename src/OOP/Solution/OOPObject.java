@@ -118,7 +118,11 @@ public class OOPObject {
         List<Class> argTypes = new ArrayList<Class>();
 
         for( Object arg : callArgs ){
-            argTypes.add(arg.getClass());
+            if(arg.getClass().equals(Integer.class)){
+                argTypes.add( Integer.TYPE );
+            } else {
+                argTypes.add(arg.getClass());
+            }
         }
 
         Class[] typesClasses = new Class[callArgs.length];
@@ -166,6 +170,11 @@ public class OOPObject {
         // definingObject test
         System.out.println( "D Sleeps: D ");
         System.out.println( d.definingObject("Sleep").getClass().getName());
+
+        System.out.println( "D Sleeps int: D");
+        System.out.println( d.definingObject("Sleep", int.class, String.class ).getClass().getName());
+
+
         System.out.println( "D Speaks: B ");
         System.out.println( d.definingObject("Speak").getClass().getName());
 
@@ -176,12 +185,21 @@ public class OOPObject {
         System.out.println( "D Stores: P ?");
         System.out.println( d.definingObject("Store").getClass().getName());
 
-
         // invoke test
         System.out.println( "D invokes Sleep: zzz ");
+        d.invoke("Sleep"); // no args
 
-        d.invoke("Sleep", 5);
+        System.out.println( "D invokes Sleep: nnnnn ");
+        d.invoke("Sleep", 5, "d"); // Integer
 
+        System.out.println( "D invokes Sleep: ssssss ");
+        d.invoke("Sleep", "s"); // String
+
+        System.out.println( "D invokes Speak: Im hunter B ");
+        d.invoke("Speak"); // String
+
+        System.out.println( "D invokes Sneak: Im hunter A");
+        d.invoke("Sneak"); // String
     }
 }
 
@@ -251,7 +269,10 @@ class D extends OOPObject {
     public void Sleep(){
         System.out.println( "zzz");
     }
-    public void Sleep( Integer n ){
-        System.out.println( "zzz");
+    public void Sleep( int n, String s ){
+        System.out.println( "nnnn");
+    }
+    public void Sleep( String st ){
+        System.out.println( "sssss");
     }
 }
