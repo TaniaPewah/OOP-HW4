@@ -86,23 +86,39 @@ public class OOPObject {
 
         // check whether my parents have the method
         if (!found) {
+
+            boolean maybeAmbiguous = false;
             // for every parent
             for (Object parent : directParents) {
                 try {
                     // if im not OOPObjParent
                     parent.getClass().getMethod(methodName, argTypes);
-                    return parent;
+                    if( maybeAmbiguous ){
+                        throw new OOP4AmbiguousMethodException();
+                    }
+                    maybeAmbiguous = true;
+                    found = true;
+                    returned = parent;
                 } catch (NoSuchMethodException e) {
 
                     // if im a OOPObj - definingObject
                     if ((OOPObject.class).isAssignableFrom(parent.getClass())){
                         try { returned = ((OOPObject)parent).definingObject(methodName, argTypes);
-                             return returned;
+                            //if( maybeAmbiguous ){
+                            //    throw new OOP4AmbiguousMethodException();
+                            //}
+                            maybeAmbiguous = true;
+                            found = true;
                         }
-
-                        catch (OOP4NoSuchMethodException OOPe){}
+                        catch (OOP4NoSuchMethodException OOPe){
+                            found = false;
+                        }
                     }
+                    //
                 }
+            }
+            if( found ) {
+                return returned;
             }
         }
 
@@ -111,7 +127,7 @@ public class OOPObject {
 
     public Object invoke(String methodName, Object... callArgs) throws
             OOP4AmbiguousMethodException, OOP4NoSuchMethodException, OOP4MethodInvocationFailedException {
-        
+
         // Separate callArgs types, find the object who defines the method, invoke
         List<Class> argTypes = new ArrayList<Class>();
 
@@ -173,11 +189,11 @@ public class OOPObject {
         System.out.println( d.definingObject("Sleep", int.class, String.class ).getClass().getName());
 
 
-        System.out.println( "D Speaks: B ");
-        System.out.println( d.definingObject("Speak").getClass().getName());
+        //System.out.println( "D Speaks: B ");
+        //System.out.println( d.definingObject("Speak").getClass().getName());
 
-        System.out.println( "D Sneaks: A ");
-        System.out.println( d.definingObject("Sneak").getClass().getName());
+        //System.out.println( "D Sneaks: A ");
+        //System.out.println( d.definingObject("Sneak").getClass().getName());
 
         // TODO doesnt work?
         System.out.println( "D Stores: P ?");
