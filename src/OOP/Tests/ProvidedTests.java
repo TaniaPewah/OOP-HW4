@@ -56,6 +56,7 @@ public class ProvidedTests {
     @Test
     public void testSimpleHierarchyInvocation() throws OOP4MethodInvocationFailedException, OOP4NoSuchMethodException,
             OOP4AmbiguousMethodException {
+        Object a = simple_hierarchy_root.invoke("inherited_method", 3);
         Assert.assertEquals("The inherited method was invoked with string 3",
                 simple_hierarchy_root.invoke("inherited_method", 3));
     }
