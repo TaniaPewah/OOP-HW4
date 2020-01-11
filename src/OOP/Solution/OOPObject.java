@@ -45,6 +45,7 @@ public class OOPObject {
         // checks only for direct parents now-
         // TODO add recursion
         Class myself = this.getClass();
+        boolean result = false;
 
         // for every parent
         for (Object parent : directParents) {
@@ -53,12 +54,17 @@ public class OOPObject {
             if (parent.getClass().equals(cls)) {
                 return true;
             }
+
+            if ((cls).isAssignableFrom(parent.getClass())) {
+                return true;
+            }
+
             // if im a OOPObj - mulIn
             if ((OOPObject.class).isAssignableFrom(parent.getClass())){
-                return ((OOPObject)parent).multInheritsFrom(cls);
+                result = ((OOPObject)parent).multInheritsFrom(cls);
             }
         }
-        return false;
+        return result;
     }
 
     public Object definingObject(String methodName, Class<?>... argTypes)
@@ -85,6 +91,8 @@ public class OOPObject {
         C c = new C();
         System.out.print( "D parents: ");
         D d = new D();
+        System.out.println( "D multiinherits from P true: ");
+        System.out.println( d.multInheritsFrom(P.class));
         System.out.println( "D multiinherits from A true: ");
         System.out.println( d.multInheritsFrom(A.class));
         System.out.println( "D multiinherits from B true: ");
@@ -93,6 +101,9 @@ public class OOPObject {
         System.out.println( d.multInheritsFrom(String.class));
         System.out.println( "D multiinherits from Boolean false: ");
         System.out.println( d.multInheritsFrom(Boolean.class));
+        System.out.println( "D multiinherits from OOPObjc true: ");
+        System.out.println( d.multInheritsFrom(OOPObject.class));
+
     }
 }
 
@@ -115,9 +126,29 @@ class C extends OOPObject {
         super();
     }
 }
+
+class P {
+    public P()  {
+    }
+}
+
+
+class T extends P{
+    public T()  {
+    }
+}
+
+
+class S extends T {
+    public S() {
+        super();
+    }
+}
+
 @OOPParent(parent = B.class, isVirtual = false)
 @OOPParent(parent = C.class, isVirtual = false)
 @OOPParent(parent = String.class, isVirtual = false)
+@OOPParent(parent = S.class, isVirtual = false)
 class D extends OOPObject {
     public D() throws OOP4ObjectInstantiationFailedException {
         super();
