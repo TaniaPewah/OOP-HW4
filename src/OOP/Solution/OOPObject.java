@@ -71,9 +71,7 @@ public class OOPObject {
 
     public Object definingObject(String methodName, Class<?>... argTypes)
             throws OOP4AmbiguousMethodException, OOP4NoSuchMethodException {
-        // TODO: check whether ambiguous check recursive
-        //.getMethods()
-        //.getDeclaredMethods()
+        // TODO: check whether ambiguous
         boolean found = true;
         Object returned = null;
 
@@ -90,7 +88,8 @@ public class OOPObject {
             // for every parent
             for (Object parent : directParents) {
                 try {
-                    returned = parent.getClass().getMethod(methodName, argTypes);
+                    // if im not OOPObjParent
+                    parent.getClass().getMethod(methodName, argTypes);
                     return parent;
                 } catch (NoSuchMethodException e) {
 
@@ -138,7 +137,6 @@ public class OOPObject {
         System.out.println( "D multiinherits from OOPObjc true: ");
         System.out.println( d.multInheritsFrom(OOPObject.class));
 
-
         System.out.println( "D Sleeps: D ");
         System.out.println( d.definingObject("Sleep").getClass().getName());
         System.out.println( "D Speaks: B ");
@@ -146,7 +144,6 @@ public class OOPObject {
 
         System.out.println( "D Sneaks: A ");
         System.out.println( d.definingObject("Sneak").getClass().getName());
-
 
         // TODO doesnt work
         System.out.println( "D Stores: P ");
@@ -185,22 +182,21 @@ class C extends OOPObject {
 }
 
 class P {
-    public P()  {
+    public P() {
     }
     public void Store(){
         System.out.println( "Im hunter P");
     }
 }
 
-
-class T extends P{
-    public T()  {
+class T extends P {
+    public T() {
+        super();
     }
     public void Speak(){
         System.out.println( "Im hunter T");
     }
 }
-
 
 class S extends T {
     public S() {
