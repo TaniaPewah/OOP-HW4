@@ -6,6 +6,7 @@ import OOP.Provided.OOP4NoSuchMethodException;
 import OOP.Provided.OOP4ObjectInstantiationFailedException;
 
 import java.lang.annotation.Annotation;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -55,6 +56,7 @@ public class OOPObject {
                 return true;
             }
 
+            // is cls my parent's regular ancestor
             if ((cls).isAssignableFrom(parent.getClass())) {
                 return true;
             }
@@ -69,19 +71,51 @@ public class OOPObject {
 
     public Object definingObject(String methodName, Class<?>... argTypes)
             throws OOP4AmbiguousMethodException, OOP4NoSuchMethodException {
-        // TODO: Implement
+        // TODO: check whether ambiguous check recursive
         //.getMethods()
         //.getDeclaredMethods()
+        boolean found = true;
+        Object returned = null;
 
-        return null;
+        // check whether this (I) have the method
+        try {
+            this.getClass().getMethod(methodName, argTypes);
+            return this;
+        } catch (NoSuchMethodException e){
+            found = false;
+        }
+
+        // check whether my parents have the method
+        if (!found) {
+            // for every parent
+            for (Object parent : directParents) {
+                try {
+                    returned = parent.getClass().getMethod(methodName, argTypes);
+                    return parent;
+                } catch (NoSuchMethodException e) {
+
+                    // if im a OOPObj - definingObject
+                    if ((OOPObject.class).isAssignableFrom(parent.getClass())){
+                        try { returned = ((OOPObject)parent).definingObject(methodName, argTypes);
+                             return returned;
+                        }
+
+                        catch (OOP4NoSuchMethodException OOPe){}
+                    }
+                }
+            }
+        }
+
+        throw new OOP4NoSuchMethodException();
     }
 
     public Object invoke(String methodName, Object... callArgs) throws
             OOP4AmbiguousMethodException, OOP4NoSuchMethodException, OOP4MethodInvocationFailedException {
         // TODO: Implement
+
         return null;
     }
-    public static void main(String[] args) throws OOP4ObjectInstantiationFailedException {
+    public static void main(String[] args) throws OOP4ObjectInstantiationFailedException, OOP4NoSuchMethodException, OOP4AmbiguousMethodException {
 
         System.out.print( "A parents: ");
         A a = new A();
@@ -104,12 +138,21 @@ public class OOPObject {
         System.out.println( "D multiinherits from OOPObjc true: ");
         System.out.println( d.multInheritsFrom(OOPObject.class));
 
+
+        System.out.println( "D Sleeps: D ");
+        System.out.println( d.definingObject("Sleep").getClass().getName());
+        System.out.println( "D Speaks: B ");
+        System.out.println( d.definingObject("Speak").getClass().getName());
+
     }
 }
 
 class A extends OOPObject {
     public A() throws OOP4ObjectInstantiationFailedException {
         super();
+    }
+    public void Speak(){
+        System.out.println( "Im hunter A");
     }
 }
 
@@ -118,6 +161,9 @@ class B extends OOPObject {
     public B() throws OOP4ObjectInstantiationFailedException {
         super();
     }
+    public void Speak(){
+        System.out.println( "Im hunter B");
+    }
 }
 
 @OOPParent(parent = A.class, isVirtual = false)
@@ -125,10 +171,16 @@ class C extends OOPObject {
     public C() throws OOP4ObjectInstantiationFailedException {
         super();
     }
+    public void Speak(){
+        System.out.println( "Im hunter C");
+    }
 }
 
 class P {
     public P()  {
+    }
+    public void Speak(){
+        System.out.println( "Im hunter P");
     }
 }
 
@@ -136,12 +188,18 @@ class P {
 class T extends P{
     public T()  {
     }
+    public void Speak(){
+        System.out.println( "Im hunter T");
+    }
 }
 
 
 class S extends T {
     public S() {
         super();
+    }
+    public void Speak(){
+        System.out.println( "Im hunter S");
     }
 }
 
@@ -152,5 +210,8 @@ class S extends T {
 class D extends OOPObject {
     public D() throws OOP4ObjectInstantiationFailedException {
         super();
+    }
+    public void Sleep(){
+        System.out.println( "zzz");
     }
 }
