@@ -29,8 +29,6 @@ public class OOPObject {
         // for every parent annotation
         for (OOPParent parentAnnot : annotations) {
 
-            // debug print
-            System.out.println(parentAnnot.parent().getName());
             Object object = null;
             try {
                 // create newInstance
@@ -149,7 +147,7 @@ public class OOPObject {
         } catch (InvocationTargetException e) {
             throw new OOP4MethodInvocationFailedException();
         } catch (NoSuchMethodException e) {
-            throw new OOP4MethodInvocationFailedException();
+            throw new OOP4NoSuchMethodException();
         }
 
         return defObj;
