@@ -103,10 +103,8 @@ public class OOPObject {
 
                     // if im a OOPObj - definingObject
                     if ((OOPObject.class).isAssignableFrom(parent.getClass())){
-                        try { returned = ((OOPObject)parent).definingObject(methodName, argTypes);
-                            //if( maybeAmbiguous ){
-                            //    throw new OOP4AmbiguousMethodException();
-                            //}
+                        try {
+                            returned = ((OOPObject)parent).definingObject(methodName, argTypes);
                             maybeAmbiguous = true;
                             found = true;
                         }
@@ -114,7 +112,6 @@ public class OOPObject {
                             found = false;
                         }
                     }
-                    //
                 }
             }
             if( found ) {
@@ -122,6 +119,7 @@ public class OOPObject {
             }
         }
 
+        // method not found
         throw new OOP4NoSuchMethodException();
     }
 
