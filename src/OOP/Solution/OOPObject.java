@@ -144,6 +144,14 @@ public class OOPObject {
         System.out.println( "D Speaks: B ");
         System.out.println( d.definingObject("Speak").getClass().getName());
 
+        System.out.println( "D Sneaks: A ");
+        System.out.println( d.definingObject("Sneak").getClass().getName());
+
+
+        // TODO doesnt work
+        System.out.println( "D Stores: P ");
+        System.out.println( d.definingObject("Store").getClass().getName());
+
     }
 }
 
@@ -151,7 +159,7 @@ class A extends OOPObject {
     public A() throws OOP4ObjectInstantiationFailedException {
         super();
     }
-    public void Speak(){
+    public void Sneak(){
         System.out.println( "Im hunter A");
     }
 }
@@ -179,7 +187,7 @@ class C extends OOPObject {
 class P {
     public P()  {
     }
-    public void Speak(){
+    public void Store(){
         System.out.println( "Im hunter P");
     }
 }
