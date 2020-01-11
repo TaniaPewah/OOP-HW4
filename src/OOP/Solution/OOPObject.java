@@ -111,10 +111,8 @@ public class OOPObject {
 
     public Object invoke(String methodName, Object... callArgs) throws
             OOP4AmbiguousMethodException, OOP4NoSuchMethodException, OOP4MethodInvocationFailedException {
-        // TODO: Implement
-
+        
         // Separate callArgs types, find the object who defines the method, invoke
-        //Class[] argTypes = new Class[callArgs.length];
         List<Class> argTypes = new ArrayList<Class>();
 
         for( Object arg : callArgs ){
@@ -133,14 +131,14 @@ public class OOPObject {
             Method method = defObj.getClass().getMethod(methodName, typesClasses);
             method.invoke(defObj, callArgs);
         } catch (IllegalAccessException e) {
-            e.printStackTrace();
+            throw new OOP4MethodInvocationFailedException();
         } catch (InvocationTargetException e) {
-            e.printStackTrace();
+            throw new OOP4MethodInvocationFailedException();
         } catch (NoSuchMethodException e) {
-            e.printStackTrace();
+            throw new OOP4MethodInvocationFailedException();
         }
 
-        return null;
+        return defObj;
     }
     public static void main(String[] args) throws OOP4ObjectInstantiationFailedException, OOP4NoSuchMethodException, OOP4AmbiguousMethodException, OOP4MethodInvocationFailedException {
 
