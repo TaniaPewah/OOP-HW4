@@ -5,12 +5,10 @@ import OOP.Provided.OOP4MethodInvocationFailedException;
 import OOP.Provided.OOP4NoSuchMethodException;
 import OOP.Provided.OOP4ObjectInstantiationFailedException;
 
-import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 
 public class OOPObject {
@@ -80,7 +78,6 @@ public class OOPObject {
     public boolean multInheritsFrom(Class<?> cls) {
         // get all my annotations - runtime reflection
         // checks only for direct parents now-
-        // TODO add recursion
         Class myself = this.getClass();
         boolean result = false;
 
@@ -93,7 +90,7 @@ public class OOPObject {
             }
 
             // is cls my parent's regular ancestor
-            if ((cls).isAssignableFrom(parent.getClass())) {
+            if (!cls.equals(OOPObject.class) && (cls).isAssignableFrom(parent.getClass())) {
                 return true;
             }
 
@@ -107,7 +104,6 @@ public class OOPObject {
 
     public Object definingObject(String methodName, Class<?>... argTypes)
             throws OOP4AmbiguousMethodException, OOP4NoSuchMethodException {
-        // TODO: check whether ambiguous
 
         boolean found = true;
         Object returned = null;
@@ -136,6 +132,7 @@ public class OOPObject {
                     maybeAmbiguous = true;
                     found = true;
                     returned = parent;
+                    
                 } catch (NoSuchMethodException e) {
 
                     // if im a OOPObj - definingObject
@@ -159,7 +156,6 @@ public class OOPObject {
                 return returned;
             }
         }
-
         // method not found
         throw new OOP4NoSuchMethodException();
     }
@@ -171,11 +167,6 @@ public class OOPObject {
         List<Class> argTypes = new ArrayList<Class>();
 
         for( Object arg : callArgs ){
-//            if(arg.getClass().equals(Integer.class)){
-//                argTypes.add( Integer.TYPE );
-//            } else {
-//                argTypes.add(arg.getClass());
-//            }
             argTypes.add(arg.getClass());
         }
 
@@ -196,5 +187,5 @@ public class OOPObject {
 
         return result; //inbal should return result of function, and not the object that defines it.
     }
-
 }
+
