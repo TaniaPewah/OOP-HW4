@@ -5,8 +5,10 @@ import OOP.Provided.OOP4MethodInvocationFailedException;
 import OOP.Provided.OOP4NoSuchMethodException;
 import OOP.Provided.OOP4ObjectInstantiationFailedException;
 
+import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -60,7 +62,16 @@ public class OOPObject {
                 instance = StaticVirtualAncestor.get(parentAnnot.parent().getName());
             else {
                 try {
-                    instance = parentAnnot.parent().getConstructor().newInstance();
+                    Constructor ctor = parentAnnot.parent().getDeclaredConstructor();
+
+                    if( ctor.getModifiers() == Modifier.PROTECTED) {
+                        ctor.setAccessible(true);
+                        instance = ctor.newInstance();
+                        ctor.setAccessible(false);
+                    } else {
+                        instance = ctor.newInstance();
+                    }
+
                 } catch (Exception e) {
                     youngest_object_created = null;
                     throw new OOP4ObjectInstantiationFailedException();
@@ -132,7 +143,7 @@ public class OOPObject {
                     maybeAmbiguous = true;
                     found = true;
                     returned = parent;
-                    
+
                 } catch (NoSuchMethodException e) {
 
                     // if im a OOPObj - definingObject
